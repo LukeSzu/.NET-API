@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: ./API/
+      dockerfile: API/Dockerfile
+    ports:
+      - "8080:8080"
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    depends_on:
+      - db
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: auction_site
+    volumes:
+      - "./DB:/docker-entrypoint-initdb.d"
+    ports:
+      - "3306:3306"
+    restart: always
