@@ -1,4 +1,6 @@
 ﻿using API.Data;
+using API.Dtos;
+using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -17,18 +19,18 @@ namespace API.Controllers
         }
         // GET: api/items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<ActionResult<IEnumerable<ItemDto>>> GetItems()
         {
             var items = await _context.Items
                 .Where(item => item.IsAvailable)
                 .Include(item => item.User) // Załaduj właściciela
-                .Select(item => new
+                .Select(item => new ItemDto
                 {
-                    item.Id,
-                    item.UserId,
-                    item.Title,
-                    item.Description,
-                    item.Price,
+                    Id = item.Id,
+                    UserId = item.UserId,
+                    Title = item.Title,
+                    Description = item.Description,
+                    Price = item.Price,
                     SellerUsername = item.User.Username // Użyj nazwy sprzedającego
                 })
                 .ToListAsync();
@@ -36,17 +38,17 @@ namespace API.Controllers
             return Ok(items);
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItemById(int id)
+        public async Task<ActionResult<IEnumerable<ItemDto>>> GetItemById(int id)
         {
             var item = await _context.Items
                 .Include(item => item.User) // Załaduj właściciela
-                .Select(item => new
+                .Select(item => new ItemDto
                 {
-                    item.Id,
-                    item.UserId,
-                    item.Title,
-                    item.Description,
-                    item.Price,
+                    Id = item.Id,
+                    UserId = item.UserId,
+                    Title = item.Title,
+                    Description = item.Description,
+                    Price = item.Price,
                     SellerUsername = item.User.Username // Użyj nazwy sprzedającego
                 })
                 .FirstOrDefaultAsync(item => item.Id == id);

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace API
+namespace API.Models
 {
     [Table("auction_history")]
     public class AuctionHistory

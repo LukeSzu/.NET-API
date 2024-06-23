@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace API
+namespace API.Models
 {
     [Table("items")]
     public class Item
