@@ -20,8 +20,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: auction_site
-    volumes:
-      - "./DB:/docker-entrypoint-initdb.d"
+    #volumes:
+      #- "./DB:/docker-entrypoint-initdb.d"
     ports:
       - "3306:3306"
     restart: always

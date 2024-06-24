@@ -8,7 +8,7 @@ namespace API.Models
         [Column("id")]
         public int Id { get; set; }
         [Column("user_id")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [Column("title")]
         public string Title { get; set; }
         [Column("description")]
@@ -18,7 +18,7 @@ namespace API.Models
         [Column("is_available")]
         public bool IsAvailable { get; set; }
         [Column("buyer_id")]
-        public int? BuyerId { get; set; }
+        public string? BuyerId { get; set; }
 
         // Navigation properties
         public User User { get; set; }

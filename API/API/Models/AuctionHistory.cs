@@ -10,7 +10,7 @@ namespace API.Models
         [Column("item_id")]
         public int ItemId { get; set; }
         [Column("user_id")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [Column("title")]
         public string Title { get; set; }
         [Column("description")]

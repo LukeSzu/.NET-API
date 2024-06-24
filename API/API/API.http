@@ -5,7 +5,33 @@ Accept: application/json
 
 ###
 
-GET {{API_HostAddress}}/api/items/1
+GET {{API_HostAddress}}/api/items/2
 Accept: application/json
 
+###
+POST {{API_HostAddress}}/api/auth/register 
+Content-Type: application/json
+
+{
+    "Username": "lukasz1",
+    "Password": "Luk@sz1"
+}
+###
+POST {{API_HostAddress}}/api/auth/login 
+Content-Type: application/json
+
+{
+    "Username": "lukasz1",
+    "Password": "Luk@sz1"
+}
+###
+POST {{API_HostAddress}}/api/items
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdWthc3oxIiwianRpIjoiZTRjNmRhMTMtZTczOC00YzU1LThkOTQtYzYyYTk0Zjc1YmI4IiwiZXhwIjoxNzE5MjY3MjkxLCJpc3MiOiJwcm9qZWN0Lm5ldCIsImF1ZCI6InByb2plY3QubmV0In0.eq6R0pVirI67eo6R2rbXHNw4AVsO5b8x2mrvO0ujqXU
+Content-Type: application/json
+
+{
+    "Title": "Laptop",
+    "Description": "dysk 500",
+    "price": 23.55
+}
 ###
