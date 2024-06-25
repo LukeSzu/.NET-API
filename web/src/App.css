@@ -1,38 +1,108 @@
-.App {
-  text-align: center;
+/* App.css */
+
+/* Reset some basic elements to improve cross-browser rendering */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Styling for the entire app container */
+body {
+  background-color: #f8f9fa;
+  color: #333;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Styling for the navigation bar */
+nav {
+  background-color: #343a40;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Styling for the navigation list */
+nav ul {
+  list-style: none;
+  padding: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 20px;
+}
+
+/* Styling for the navigation list items */
+nav ul li {
+  display: inline;
+}
+
+/* Styling for the navigation links */
+nav ul li a {
+  text-decoration: none;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+/* Styling for hover effect on navigation links */
+nav ul li a:hover {
+  background-color: #0056b3;
+}
+
+/* Styling for the main table */
+table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+/* Styling for table headers and cells */
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+/* Styling for table headers */
+th {
+  background-color: #343a40;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Styling for table rows */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Styling for buttons */
+button {
+  padding: 8px 16px;
+  margin: 4px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+/* Styling for hover effect on buttons */
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Additional table styling */
+.table-container {
+  padding: 20px;
+}
+
+.table-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #343a40;
 }

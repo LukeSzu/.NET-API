@@ -53,7 +53,7 @@ namespace API.Controllers
                 var user = await _userManager.FindByNameAsync(model.Username);
                 var token = GenerateJwtToken(user);
 
-                return Ok(new { Token = token });
+                return Ok(new { Token = token, Username = user.UserName });
             }
 
             return Unauthorized();
