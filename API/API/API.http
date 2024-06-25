@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-GET {{API_HostAddress}}/api/items/2
+GET {{API_HostAddress}}/api/items/5
 Accept: application/json
 
 ###
@@ -21,7 +21,7 @@ POST {{API_HostAddress}}/api/auth/login
 Content-Type: application/json
 
 {
-    "Username": "lukasz1",
+    "Username": "lukasz",
     "Password": "Luk@sz1"
 }
 ###
@@ -35,3 +35,14 @@ Content-Type: application/json
     "price": 23.55
 }
 ###
+
+PUT {{API_HostAddress}}/api/items/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdWthc3oiLCJqdGkiOiI0YjRmMjA0Ni0yMDZlLTQ1OWUtOWFkMC03OTE4OWZjZmYxY2YiLCJleHAiOjE3MTkzMDg1NDMsImlzcyI6InByb2plY3QubmV0IiwiYXVkIjoicHJvamVjdC5uZXQifQ.eYiEy-5DUwlN0ShkYlZWXGBjs8-d9Vl0snOnn07W25g
+Content-Type: application/json
+
+{
+    "Title": "Laptopik",
+    "Description": "dysk 1000",
+    "price": 230.54,
+    "isAvailable": false
+}

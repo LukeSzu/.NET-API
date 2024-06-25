@@ -48,15 +48,15 @@ namespace ApiTests
 
             var mockUserManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
             mockUserManager.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                           .ReturnsAsync(() => _context.Users.First(u => u.UserName == "user1")); // Przyk³adowy u¿ytkownik dla testów
+                           .ReturnsAsync(() => _context.Users.First(u => u.UserName == "user1")); 
 
             _controller = new ItemsController(_context, mockUserManager.Object);
             _userManager = mockUserManager.Object;
         }
         private void SeedDatabase()
         {
-            _context.Database.EnsureDeleted(); // Upewniamy siê, ¿e baza danych jest usuniêta
-            _context.Database.EnsureCreated(); // Tworzymy now¹ bazê danych
+            _context.Database.EnsureDeleted(); 
+            _context.Database.EnsureCreated(); 
 
             var users = new List<User>
             {
@@ -80,18 +80,12 @@ namespace ApiTests
         [Fact]
         public async Task Get_Items_Returns_OkResult()
         {
-            // Arrange (setup)
-            
-
-            // Act (perform the action)
             var result = await _controller.GetItems();
 
-            // Assert (verify the result)
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var items = Assert.IsAssignableFrom<IEnumerable<ItemDto>>(okResult.Value);
-            Assert.Equal(2, items.Count()); // Ensure two items are returned
+            Assert.Equal(2, items.Count());
 
-            // Additional assertions on item properties if needed
             var item1 = items.FirstOrDefault(i => i.Id == 1);
             Assert.NotNull(item1);
             Assert.Equal("Item 1", item1.Title);

@@ -24,10 +24,7 @@ namespace API.Controllers
             _context = context;
             _userManager = userManager;
         }
-        private string GetCurrentUserId()
-        {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        }
+
         // GET: api/items
         [HttpGet]
         [AllowAnonymous]
@@ -35,7 +32,7 @@ namespace API.Controllers
         {
             var items = await _context.Items
                 .Where(item => item.IsAvailable)
-                .Include(item => item.User) // Załaduj właściciela
+                .Include(item => item.User) 
                 .Select(item => new ItemDto
                 {
                     Id = item.Id,
@@ -43,18 +40,22 @@ namespace API.Controllers
                     Title = item.Title,
                     Description = item.Description,
                     Price = item.Price,
-                    SellerUsername = item.User.UserName // Użyj nazwy sprzedającego
+                    SellerUsername = item.User.UserName,
+                    isAvailable = item.IsAvailable
                 })
                 .ToListAsync();
 
             return Ok(items);
         }
+
+
+        // GET: api/items/id
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ItemDto>>> GetItemById(int id)
         {
             var item = await _context.Items
-                .Include(item => item.User) // Załaduj właściciela
+                .Include(item => item.User)
                 .Select(item => new ItemDto
                 {
                     Id = item.Id,
@@ -62,7 +63,8 @@ namespace API.Controllers
                     Title = item.Title,
                     Description = item.Description,
                     Price = item.Price,
-                    SellerUsername = item.User.UserName // Użyj nazwy sprzedającego
+                    SellerUsername = item.User.UserName,
+                    isAvailable = item.IsAvailable
                 })
                 .FirstOrDefaultAsync(item => item.Id == id);
 
@@ -73,37 +75,12 @@ namespace API.Controllers
 
             return Ok(item);
         }
+
+
+        // PUT: api/items/id
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateItem(int id, [FromBody] ItemDto updatedItem)
-        {
-            var item = await _context.Items.FindAsync(id);
-
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            // Sprawdź, czy zalogowany użytkownik jest właścicielem przedmiotu
-            var currentUser = await _userManager.GetUserAsync(User);
-            if (item.UserId != currentUser.Id)
-            {
-                return Forbid(); // Brak uprawnień do edycji
-            }
-
-            // Zaktualizuj właściwości przedmiotu
-            item.Title = updatedItem.Title;
-            item.Description = updatedItem.Description;
-            item.Price = updatedItem.Price;
-
-            _context.Items.Update(item);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { Message = "Item updated successfully" });
-        }
-        [HttpPost]
-        [Authorize] // Endpoint dodawania nowego itemu wymaga autoryzacji
-        public async Task<IActionResult> AddItem([FromBody] AddItemDto itemDto)
+        public async Task<IActionResult> UpdateItem(int id, [FromBody] EditItemDto updatedItem)
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
@@ -114,7 +91,6 @@ namespace API.Controllers
 
             if (token.StartsWith("Bearer "))
             {
-                // Usuń prefiks "Bearer " z tokena
                 token = token.Substring(7);
             }
 
@@ -127,7 +103,61 @@ namespace API.Controllers
             }
             var username = jsonToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
 
-            // Znajdź użytkownika w bazie danych na podstawie nazwy użytkownika
+            var user = _userManager.FindByNameAsync(username).Result;
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var item = await _context.Items.FindAsync(id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+            if (item.UserId != user.Id)
+            {
+                return Forbid(); 
+            }
+            item.Title = updatedItem.Title;
+            item.Description = updatedItem.Description;
+            item.Price = updatedItem.Price;
+            item.IsAvailable = updatedItem.IsAvailable;
+
+            _context.Items.Update(item);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Item updated successfully" });
+        }
+
+
+        // POST: api/items
+        [HttpPost]
+        [Authorize] 
+        public async Task<IActionResult> AddItem([FromBody] AddItemDto itemDto)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+
+            if (token.StartsWith("Bearer "))
+            {
+                token = token.Substring(7);
+            }
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            if (jsonToken == null)
+            {
+                return Unauthorized();
+            }
+            var username = jsonToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
+
             var user = _userManager.FindByNameAsync(username).Result;
 
             if (user == null)
@@ -140,7 +170,7 @@ namespace API.Controllers
                 Title = itemDto.Title,
                 Description = itemDto.Description,
                 Price = itemDto.Price,
-                UserId = user.Id,  // Ustaw UserId na Id zalogowanego użytkownika
+                UserId = user.Id,  
                 IsAvailable = true
             };
 
@@ -149,5 +179,7 @@ namespace API.Controllers
 
             return Ok(new { Message = "Item added successfully" });
         }
+
+
     }
 }
