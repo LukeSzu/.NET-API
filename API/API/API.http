@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-GET {{API_HostAddress}}/api/items/5
+GET {{API_HostAddress}}/api/items/9
 Accept: application/json
 
 ###
@@ -26,23 +26,23 @@ Content-Type: application/json
 }
 ###
 POST {{API_HostAddress}}/api/items
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdWthc3oxIiwianRpIjoiZTRjNmRhMTMtZTczOC00YzU1LThkOTQtYzYyYTk0Zjc1YmI4IiwiZXhwIjoxNzE5MjY3MjkxLCJpc3MiOiJwcm9qZWN0Lm5ldCIsImF1ZCI6InByb2plY3QubmV0In0.eq6R0pVirI67eo6R2rbXHNw4AVsO5b8x2mrvO0ujqXU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNjRlMmNjYy0wNGZkLTRlOTYtYjkwNy04OTQwYWE5NDhiNjQiLCJqdGkiOiI3M2E2MGQzNS03ZWQwLTQ0MzktYjVhYi05OTBmM2M1NWU5NDgiLCJleHAiOjE3MTkzMTMyMDMsImlzcyI6InByb2plY3QubmV0IiwiYXVkIjoicHJvamVjdC5uZXQifQ.W8fXmfh5ochGtxl6D3EioU2GN_XASm_WgNnqOvTVWZk
 Content-Type: application/json
 
 {
-    "Title": "Laptop",
-    "Description": "dysk 500",
-    "price": 23.55
+    "Title": "Ksiazka",
+    "Description": "Fajna",
+    "price": 19.99
 }
 ###
 
-PUT {{API_HostAddress}}/api/items/5
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdWthc3oiLCJqdGkiOiI0YjRmMjA0Ni0yMDZlLTQ1OWUtOWFkMC03OTE4OWZjZmYxY2YiLCJleHAiOjE3MTkzMDg1NDMsImlzcyI6InByb2plY3QubmV0IiwiYXVkIjoicHJvamVjdC5uZXQifQ.eYiEy-5DUwlN0ShkYlZWXGBjs8-d9Vl0snOnn07W25g
+PUT {{API_HostAddress}}/api/items/9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNjRlMmNjYy0wNGZkLTRlOTYtYjkwNy04OTQwYWE5NDhiNjQiLCJqdGkiOiI3M2E2MGQzNS03ZWQwLTQ0MzktYjVhYi05OTBmM2M1NWU5NDgiLCJleHAiOjE3MTkzMTMyMDMsImlzcyI6InByb2plY3QubmV0IiwiYXVkIjoicHJvamVjdC5uZXQifQ.W8fXmfh5ochGtxl6D3EioU2GN_XASm_WgNnqOvTVWZk
 Content-Type: application/json
 
 {
-    "Title": "Laptopik",
-    "Description": "dysk 1000",
-    "price": 230.54,
+    "Title": "Harry Potter",
+    "Description": "I zakon feniksa",
+    "price": 9.99,
     "isAvailable": false
 }

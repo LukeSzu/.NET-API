@@ -63,6 +63,11 @@ namespace ApiTests
                 new User { Id = "1", UserName = "user1" },
                 new User { Id = "2", UserName = "user2" }
             };
+            var passwordHasher = new PasswordHasher<User>();
+            foreach (var user in users)
+            {
+                user.PasswordHash = passwordHasher.HashPassword(user, "Password123!");
+            }
 
             _context.Users.AddRange(users);
             _context.SaveChanges(); // Save changes to detach tracked entities
@@ -78,7 +83,7 @@ namespace ApiTests
             _context.SaveChanges();
         }
         [Fact]
-        public async Task Get_Items_Returns_OkResult()
+        public async Task Get_Items_OkResult()
         {
             var result = await _controller.GetItems();
 
@@ -100,7 +105,7 @@ namespace ApiTests
         }
 
         [Fact]
-        public async Task Get_Item_Returns_OkResult()
+        public async Task Get_Item_OkResult()
         {
             int itemId = 1;
             var result = await _controller.GetItemById(itemId);
@@ -110,28 +115,33 @@ namespace ApiTests
             Assert.Equal(itemId, item.Id);
         }
         [Fact]
-        public async Task GetItemNotFound()
+        public async Task Get_Item_NotFound()
         {
             var result = await _controller.GetItemById(2137);
             var okResult = Assert.IsType<NotFoundResult>(result.Result);
         }
         [Fact]
-        public async Task GetItemBadRequest()
+        public async Task Get_Item_BadRequest()
         {
             var result = await _controller.GetItemById(-2);
             var okResult = Assert.IsType<NotFoundResult>(result.Result);
         }
         [Fact]
-        public async Task Add_Item_Returns_CreatedResult()
+        public async Task Add_Item_CreatedResult()
         {
             var newItem = new AddItemDto { Title = "New Item", Description = "New Description", Price = 300 };
 
             // Utwórz u¿ytkownika i token JWT dla testu
-            var user = new User { Id = "1", UserName = "user1" };
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == "user1");
+            Assert.NotNull(user);
             var token = GenerateJwtToken(user);
-
             // Ustaw nag³ówek Authorization z tokenem JWT
-            _controller.HttpContext.Request.Headers["Authorization"] = "Bearer " + token;
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+            _controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
 
             // Wykonaj akcjê dodawania przedmiotu
             var result = await _controller.AddItem(newItem);
@@ -145,8 +155,8 @@ namespace ApiTests
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

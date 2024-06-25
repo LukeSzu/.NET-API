@@ -36,7 +36,6 @@ namespace API.Controllers
                 .Select(item => new ItemDto
                 {
                     Id = item.Id,
-                    UserId = item.UserId,
                     Title = item.Title,
                     Description = item.Description,
                     Price = item.Price,
@@ -59,7 +58,6 @@ namespace API.Controllers
                 .Select(item => new ItemDto
                 {
                     Id = item.Id,
-                    UserId = item.UserId,
                     Title = item.Title,
                     Description = item.Description,
                     Price = item.Price,
@@ -101,9 +99,14 @@ namespace API.Controllers
             {
                 return Unauthorized();
             }
-            var username = jsonToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            var userId = jsonToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
 
-            var user = _userManager.FindByNameAsync(username).Result;
+            if(userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var user = _userManager.FindByIdAsync(userId).Result;
 
             if (user == null)
             {
@@ -156,9 +159,9 @@ namespace API.Controllers
             {
                 return Unauthorized();
             }
-            var username = jsonToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            var userid= jsonToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
 
-            var user = _userManager.FindByNameAsync(username).Result;
+            var user = _userManager.FindByIdAsync(userid).Result;
 
             if (user == null)
             {
