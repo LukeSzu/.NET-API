@@ -80,34 +80,13 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateItem(int id, [FromBody] EditItemDto updatedItem)
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
-            if (token == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
             {
                 return Unauthorized();
             }
 
-            if (token.StartsWith("Bearer "))
-            {
-                token = token.Substring(7);
-            }
-
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-
-            if (jsonToken == null)
-            {
-                return Unauthorized();
-            }
-            var userId = jsonToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
-
-            if(userId == null)
-            {
-                return Unauthorized();
-            }
-
-            var user = _userManager.FindByIdAsync(userId).Result;
-
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return Unauthorized();
@@ -135,34 +114,50 @@ namespace API.Controllers
         }
 
 
+        // GET: api/items/myitems
+        [Authorize]
+        [HttpGet("myitems")]
+        public async Task<IActionResult> GetUserItems()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var items = _context.Items.Where(i => i.UserId == userId).ToList();
+
+            var itemsDto = items.Select(i => new ItemDto
+            {
+                Id = i.Id,
+                Title = i.Title,
+                Description = i.Description,
+                Price = i.Price,
+                SellerUsername = user.UserName
+            }).ToList();
+
+            return Ok(itemsDto);
+        }
+
+
         // POST: api/items
         [HttpPost]
         [Authorize] 
         public async Task<IActionResult> AddItem([FromBody] AddItemDto itemDto)
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
-            if (token == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
             {
                 return Unauthorized();
             }
 
-            if (token.StartsWith("Bearer "))
-            {
-                token = token.Substring(7);
-            }
-
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-
-            if (jsonToken == null)
-            {
-                return Unauthorized();
-            }
-            var userid= jsonToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
-
-            var user = _userManager.FindByIdAsync(userid).Result;
-
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return Unauthorized();

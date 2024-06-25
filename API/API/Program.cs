@@ -27,6 +27,16 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+// Dodanie obs³ugi CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -60,6 +70,9 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate();
 }
 
+
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -70,6 +83,8 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = "docs";
     });
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

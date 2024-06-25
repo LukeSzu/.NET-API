@@ -21,7 +21,7 @@ POST {{API_HostAddress}}/api/auth/login
 Content-Type: application/json
 
 {
-    "Username": "lukasz",
+    "Username": "lukasz1",
     "Password": "Luk@sz1"
 }
 ###
@@ -46,3 +46,9 @@ Content-Type: application/json
     "price": 9.99,
     "isAvailable": false
 }
+
+###
+
+GET {{API_HostAddress}}/api/items/myitems
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNjRlMmNjYy0wNGZkLTRlOTYtYjkwNy04OTQwYWE5NDhiNjQiLCJqdGkiOiI3M2E2MGQzNS03ZWQwLTQ0MzktYjVhYi05OTBmM2M1NWU5NDgiLCJleHAiOjE3MTkzMTMyMDMsImlzcyI6InByb2plY3QubmV0IiwiYXVkIjoicHJvamVjdC5uZXQifQ.W8fXmfh5ochGtxl6D3EioU2GN_XASm_WgNnqOvTVWZk
+Accept: application/json
