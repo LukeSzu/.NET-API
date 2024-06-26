@@ -94,3 +94,53 @@ tr:nth-child(even) {
   font-size: 24px;
   color: #343a40;
 }
+
+
+/* Login.css */
+
+.form-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form-container input[type="text"],
+.form-container input[type="password"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.form-container button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.form-container button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.message {
+  padding: 10px;
+  background-color: #32d2e7;
+  border: 1px solid #0026ff;
+  border-radius: 4px;
+  color: #000000;
+  margin-bottom: 15px;
+  text-align: center;
+}
