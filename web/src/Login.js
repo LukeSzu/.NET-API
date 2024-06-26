@@ -3,12 +3,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Poprawiony import
+import useLoginTimeout from './loginTimeout';
 
 const Login = () => {
     const [form, setForm] = useState({ username: '', password: '' });
     const navigate = useNavigate();
     const [message, setMessage] = useState('');
     const [loginSuccess, setLoginSuccess] = useState(false);
+    const { setLoginTimeout, clearLoginTimeout } = useLoginTimeout();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,11 +30,13 @@ const Login = () => {
             const currentTime = new Date().getTime();
             const timeUntilExpiration = expirationTime - currentTime;
 
-            const timeoutId = setTimeout(() => {
+            clearLoginTimeout();
+            setLoginTimeout(() => {
                 localStorage.removeItem('token');
                 localStorage.removeItem('username');
                 navigate("/login");
             }, timeUntilExpiration);
+
             setMessage("Login success!");
             setLoginSuccess(true);
         } catch (error) {

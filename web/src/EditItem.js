@@ -23,6 +23,13 @@ const Input = styled.input`
     border-radius: 4px;
 `;
 
+const Select = styled.select`
+    margin-bottom: 16px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+`;
+
 const Button = styled.button`
     padding: 10px;
     color: white;
@@ -35,7 +42,7 @@ const Button = styled.button`
 const EditItem = () => {
     const { id } = useParams();
     const navigate = useNavigate(); // użyj useNavigate
-    const [item, setItem] = useState({ title: '', description: '', price: '' });
+    const [item, setItem] = useState({ title: '', description: '', price: '', isAvailable: false });
 
     useEffect(() => {
         // Pobierz szczegóły przedmiotu z API
@@ -50,22 +57,30 @@ const EditItem = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setItem(prevState => ({
-            ...prevState,
-            [name]: value
+        const newValue = name === 'isAvailable' ? value === 'true' : value;
+
+        setItem(prevItem => ({
+            ...prevItem,
+            [name]: newValue
         }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Zaktualizuj przedmiot
-        axios.put(`${API_URL}/items/${id}`, item, {
+        
+        const editData = {
+            title: item.title,
+            description: item.description,
+            price: item.price,
+            isAvailable: item.isAvailable
+        }
+        axios.put(`${API_URL}/items/${id}`, editData, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
         .then(response => {
-            navigate('/'); // użyj navigate zamiast history.push
+            navigate('/'); 
         })
         .catch(error => {
             console.error('Error updating item:', error);
@@ -94,10 +109,20 @@ const EditItem = () => {
             <Input
                 id="price"
                 name="price"
-                type="number"
+                type="decimal"
                 value={item.price}
                 onChange={handleChange}
             />
+            <Label htmlFor="isAvailable">Available:</Label>
+                <Select
+                    id="isAvailable"
+                    name="isAvailable"
+                    value={item.isAvailable ? 'true' : 'false'} // Konwersja boolean na 'true'/'false'
+                    onChange={handleChange}
+                >
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </Select>
             <Button type="submit">Save</Button>
         </Form>
     );

@@ -1,5 +1,4 @@
 import { API_URL } from './config'; 
-// src/components/ItemTable.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -40,7 +39,7 @@ function ItemTable() {
 
     return (
         <div className="table-container">
-            <h2 className="table-title">Items for Sale</h2>
+            <h2 className="table-title">All items for sale</h2>
             {error && <p>{error}</p>}
             <table>
                 <thead>

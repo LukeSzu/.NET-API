@@ -4,16 +4,19 @@ import ItemTable from './ItemTable';
 import EditItem from './EditItem';
 import Login from './Login';
 import Register from './Register';
-import MyItems from './MyItems';
+import MyItemTable from './MyItems';
 import './App.css';
+import useLoginTimeout from './loginTimeout';
 
 function Navigation() {
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
+  const { clearLoginTimeout } = useLoginTimeout();
 
   const handleLogout = () => {
     localStorage.removeItem('username');
     localStorage.removeItem('token');
+    clearLoginTimeout();
     navigate('/login');
   };
 
@@ -58,6 +61,7 @@ function App() {
           <Route path="/edit/:id" element={<EditItem />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/myitems" element={<MyItemTable />} />
         </Routes>
       </div>
     </Router>

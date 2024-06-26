@@ -1,39 +1,87 @@
+import { API_URL } from './config'; 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { API_URL } from './config';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import useLoginTimeout from './loginTimeout';
 
-const MyItems = () => {
-    const [items, setItems] = useState([]);
-    const username = localStorage.getItem('username');
-
-    useEffect(() => {
-        const fetchItems = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/items`);
-                const userItems = response.data.filter(item => item.sellerUsername === username);
-                setItems(userItems);
-            } catch (error) {
-                console.error('Error fetching items:', error);
-            }
-        };
-
-        fetchItems();
-    }, [username]);
-
-    return (
-        <div className="my-items-container">
-            <h2>My Items</h2>
-            {items.length > 0 ? (
-                <ul>
-                    {items.map(item => (
-                        <li key={item.id}>{item.title} - {item.description} - ${item.price}</li>
-                    ))}
-                </ul>
-            ) : (
-                <p>You have no items listed.</p>
-            )}
-        </div>
-    );
+const getUsernameFromLocalStorage = () => {
+    return localStorage.getItem('username');
 };
 
-export default MyItems;
+function MyItemTable() {
+    const [items, setItems] = useState([]);
+    const [error, setError] = useState('');
+    const username = getUsernameFromLocalStorage();
+    const { setLoginTimeout, clearLoginTimeout } = useLoginTimeout();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        axios.get(`${API_URL}/items/myitems`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+            .then(response => setItems(response.data))
+            .catch(error => {
+                localStorage.removeItem('username');
+                localStorage.removeItem('token');
+                clearLoginTimeout();
+                navigate('/login');
+                setError('Error fetching items')
+            });
+    }, []);
+
+    const handleDelete = async (itemId) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`${API_URL}/items/${itemId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setItems(items.filter(item => item.id !== itemId));
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    };
+
+
+    return (
+        <div className="table-container">
+            <h2 className="table-title">Items for Sale</h2>
+            {error && <p>{error}</p>}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Seller</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {items.map(item => (
+                        <tr key={item.id}>
+                            <td>{item.title}</td>
+                            <td>{item.description}</td>
+                            <td>{item.price}</td>
+                            <td>{item.sellerUsername}</td>
+                            <td>
+                            {username && username === item.sellerUsername && (
+                                <>
+                                    <Link to={`/edit/${item.id}`}><button className="nav-item">Edit</button></Link>
+                                    <button onClick={() => handleDelete(item.id) } className="nav-item">Delete</button>
+                                </>
+                            )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+}
+
+export default MyItemTable;
