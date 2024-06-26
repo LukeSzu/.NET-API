@@ -36,18 +36,23 @@ nav ul li {
   display: inline;
 }
 
-/* Styling for the navigation links */
-nav ul li a {
+/* Common styling for links and buttons */
+.nav-item {
+  display: inline-block;
   text-decoration: none;
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border-radius: 4px;
   transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  margin-left: 1em;
 }
 
-/* Styling for hover effect on navigation links */
-nav ul li a:hover {
+/* Styling for hover effect on links and buttons */
+.nav-item:hover {
   background-color: #0056b3;
 }
 
@@ -76,23 +81,6 @@ th {
 /* Styling for table rows */
 tr:nth-child(even) {
   background-color: #f2f2f2;
-}
-
-/* Styling for buttons */
-button {
-  padding: 8px 16px;
-  margin: 4px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-/* Styling for hover effect on buttons */
-button:hover {
-  background-color: #0056b3;
 }
 
 /* Additional table styling */
