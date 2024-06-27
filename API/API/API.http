@@ -13,16 +13,16 @@ POST {{API_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
-    "Username": "lukasz1",
-    "Password": "Luk@sz1"
+    "Username": "lukasz",
+    "Password": "lukasz"
 }
 ###
 POST {{API_HostAddress}}/api/auth/login 
 Content-Type: application/json
 
 {
-    "Username": "lukasz1",
-    "Password": "Luk@sz1"
+    "Username": "lukasz5",
+    "Password": "lukasz"
 }
 ###
 POST {{API_HostAddress}}/api/items

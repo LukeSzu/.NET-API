@@ -73,6 +73,15 @@ function ItemTable() {
                     ))}
                 </tbody>
             </table>
+            {username && (
+                <>
+                <div class="add-item-container">
+                    <Link to="/additem" className="add-item">Add item</Link>
+                </div>
+                </>
+            )}
+            
+            
         </div>
     );
 }

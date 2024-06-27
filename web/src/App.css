@@ -28,7 +28,7 @@ nav ul {
   padding: 0;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 0.5em;
 }
 
 /* Styling for the navigation list items */
@@ -49,6 +49,7 @@ nav ul li {
   cursor: pointer;
   text-align: center;
   margin-left: 1em;
+  font-size: medium;
 }
 
 /* Styling for hover effect on links and buttons */
@@ -143,4 +144,39 @@ tr:nth-child(even) {
   color: #000000;
   margin-bottom: 15px;
   text-align: center;
+}
+.add-item-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Styl dla przycisku */
+.add-item {
+  display: inline-block;
+  text-decoration: none;
+  padding: 1em 3em;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+
+}
+
+.add-item:hover {
+  background-color: #0056b3;
+}
+.hi {
+  color: white;
+  margin: 1em;
+  display: inline;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
 }

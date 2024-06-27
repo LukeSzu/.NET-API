@@ -5,6 +5,7 @@ import EditItem from './EditItem';
 import Login from './Login';
 import Register from './Register';
 import MyItemTable from './MyItems';
+import AddItem from './AddItem';
 import './App.css';
 import useLoginTimeout from './loginTimeout';
 
@@ -21,10 +22,16 @@ function Navigation() {
   };
 
   return (
-    <nav>
+    <nav class ='nav-container'>
+      {username ? (
+        <span class="hi">Hi, {username}</span>
+      ) : (
+        <span class="hi">Hi</span>
+      )}
+      
       <ul>
         <li>
-          <Link to="/" className="nav-item">Home</Link>
+          <Link to="/" className="nav-item">All Items</Link>
         </li>
         
         {username ? (
@@ -62,6 +69,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/myitems" element={<MyItemTable />} />
+          <Route path="/additem" element={<AddItem />} />
         </Routes>
       </div>
     </Router>

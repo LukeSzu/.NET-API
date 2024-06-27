@@ -80,6 +80,13 @@ function MyItemTable() {
                     ))}
                 </tbody>
             </table>
+            {username && (
+                <>
+                <div class="add-item-container">
+                    <button className="add-item">Add item</button>
+                </div>
+                </>
+            )}
         </div>
     );
 }
