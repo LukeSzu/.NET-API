@@ -56,18 +56,18 @@ function ItemTable() {
                         <tr key={item.id}>
                             <td>{item.title}</td>
                             <td>{item.description}</td>
-                            <td>{item.price}</td>
+                            <td>{item.price === 0 ? 'Free' : `${item.price.toFixed(2)}`}</td>
                             <td>{item.sellerUsername}</td>
                             <td>
+                            <Link to={`/details/${item.id}`}><button className="nav-item">Details</button></Link>
                             {username && username === item.sellerUsername && (
                                 <>
                                     <Link to={`/edit/${item.id}`}><button className="nav-item">Edit</button></Link>
                                     <button onClick={() => handleDelete(item.id) } className="nav-item">Delete</button>
                                 </>
                             )}
-                            {username && username !== item.sellerUsername && (
-                                <button onClick={() => handleBuy(item.id)} className="nav-item">Buy</button>
-                            )}
+                            
+                            
                             </td>
                         </tr>
                     ))}

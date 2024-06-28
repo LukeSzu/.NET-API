@@ -49,6 +49,8 @@ nav ul li {
   cursor: pointer;
   text-align: center;
   margin-left: 1em;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
   font-size: medium;
 }
 
@@ -138,9 +140,6 @@ tr:nth-child(even) {
 
 .message {
   padding: 10px;
-  background-color: #32d2e7;
-  border: 1px solid #0026ff;
-  border-radius: 4px;
   color: #000000;
   margin-bottom: 15px;
   text-align: center;

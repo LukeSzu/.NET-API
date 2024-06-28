@@ -43,7 +43,8 @@ const AddItem = () => {
     const { id } = useParams();
     const navigate = useNavigate(); 
     const [item, setItem] = useState({ title: '', description: '', price: '', isAvailable: false });
-
+    const [message, setMessage] = useState('');
+    const [actionSuccess, setActionSuccess] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -54,26 +55,45 @@ const AddItem = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
+        if(item.price == ''){
+            item.price = '0'
+        }
         const editData = {
             title: item.title,
             description: item.description,
             price: item.price,
         }
-        axios.post(`${API_URL}/items`, editData, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+
+        try{
+            const response = await axios.post(`${API_URL}/items`, editData, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            setMessage('Item added successfully!');
+            setActionSuccess(true);
+        }catch(error){
+            if (error.response && error.response.data && Array.isArray(error.response.data)) {
+                const firstErrorDescription = error.response.data[0].description;
+                setMessage(firstErrorDescription);
+            } else {
+                setMessage("Another error ¯\\_(ツ)_/¯");
             }
-        })
-        .then(response => {
-            navigate('/'); 
-        })
-        .catch(error => {
-            console.error('Error updating item:', error);
-        });
+        }
     };
+
+    useEffect(() => {
+        if (actionSuccess) {
+            const timeoutId = setTimeout(() => {
+                navigate('/');
+            }, 3000); 
+            
+            return () => clearTimeout(timeoutId); 
+        }
+    }, [actionSuccess, navigate]);
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -102,6 +122,7 @@ const AddItem = () => {
                 onChange={handleChange}
             />
             <Button type="submit">Add</Button>
+            {message && <p class="message">{message}</p>}
         </Form>
     );
 };

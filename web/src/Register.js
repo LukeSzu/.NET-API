@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-    const [form, setForm] = useState({ username: '', password: '', Repassword: '' });
+    const [form, setForm] = useState({ username: '', password: '', Repassword: '', city: '', email: '', phonenumber: '', address: '' });
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,7 +30,6 @@ const Register = () => {
             setMessage('User registered successfully!');
             setRegistrationSuccess(true);
         } catch (error) {
-            console.log(error);
             if (error.response && error.response.data && Array.isArray(error.response.data)) {
                 const firstErrorDescription = error.response.data[0].description;
                 setMessage(firstErrorDescription);
@@ -63,6 +62,22 @@ const Register = () => {
             <div>
                 <label>Retype password:</label>
                 <input type="password" name="Repassword" value={form.Repassword} onChange={handleChange} />
+            </div>
+            <div>
+                <label>E-mail</label>
+                <input type="text" name="email" value={form.email} onChange={handleChange} />
+            </div>
+            <div>
+                <label>Phone number</label>
+                <input type="text" name="phonenumber" value={form.phonenumber} onChange={handleChange} pattern='[0-9]{9}' />
+            </div>
+            <div>
+                <label>City:</label>
+                <input type="text" name="city" value={form.city} onChange={handleChange} />
+            </div>
+            <div>
+                <label>Address:</label>
+                <input type="text" name="address" value={form.address} onChange={handleChange} />
             </div>
             <button type="submit">Register</button>
             {message && <p class="message">{message}</p>}

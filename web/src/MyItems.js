@@ -66,9 +66,10 @@ function MyItemTable() {
                         <tr key={item.id}>
                             <td>{item.title}</td>
                             <td>{item.description}</td>
-                            <td>{item.price}</td>
+                            <td>{item.price === 0 ? 'Free' : `${item.price.toFixed(2)}`}</td>
                             <td>{item.sellerUsername}</td>
                             <td>
+                            <Link to={`/details/${item.id}`}><button className="nav-item">Details</button></Link>
                             {username && username === item.sellerUsername && (
                                 <>
                                     <Link to={`/edit/${item.id}`}><button className="nav-item">Edit</button></Link>
@@ -83,7 +84,7 @@ function MyItemTable() {
             {username && (
                 <>
                 <div class="add-item-container">
-                    <button className="add-item">Add item</button>
+                    <Link to="/additem" className="add-item">Add item</Link>
                 </div>
                 </>
             )}

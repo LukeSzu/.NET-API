@@ -6,6 +6,7 @@ import Login from './Login';
 import Register from './Register';
 import MyItemTable from './MyItems';
 import AddItem from './AddItem';
+import DetailsItem from './DetailsItem';
 import './App.css';
 import useLoginTimeout from './loginTimeout';
 
@@ -13,6 +14,7 @@ function Navigation() {
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
   const { clearLoginTimeout } = useLoginTimeout();
+  document.title = "Advertising portal"
 
   const handleLogout = () => {
     localStorage.removeItem('username');
@@ -70,6 +72,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/myitems" element={<MyItemTable />} />
           <Route path="/additem" element={<AddItem />} />
+          <Route path="/details/:id" element={<DetailsItem />} />
         </Routes>
       </div>
     </Router>

@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
 using API.Dtos;
 using API.Models;
+using System.Text.RegularExpressions;
 
 namespace API.Controllers
 {
@@ -26,12 +27,47 @@ namespace API.Controllers
             _signInManager = signInManager;
             _configuration = configuration;
         }
+        private string returnError(string code, string description)
+        {    
+            return "[{ \"code\": \""+code+ "\", \"description\": \"" + description+ "\"}]";
+        }
 
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
-            var user = new User { UserName = model.Username };
+            var user = new User { 
+                UserName = model.Username,
+                PhoneNumber = model.PhoneNumber,
+                Email = model.Email,
+                City = model.City,
+                Address = model.Address
+            };
+            var errors = new List<IdentityError>();
+            if (user.UserName.Length < 5)
+            {
+                errors.Add(new IdentityError { Code = "shortUsername", Description = "Username must have at least 5 letters." });
+            }
+            if (!Regex.IsMatch(user.PhoneNumber, @"^\d{9}$"))
+            {
+                errors.Add(new IdentityError { Code = "BadNumber", Description = "Phone number isn't in 123456789 format." });
+            }
+            if (!Regex.IsMatch(user.Email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
+            {
+                errors.Add(new IdentityError { Code = "BadEmail", Description = "Check your email adress." });
+            }
+            if(user.City == "")
+            {
+                errors.Add(new IdentityError { Code = "EmptyCity", Description = "City cannot be empty." });
+            }
+            if (user.Address == "")
+            {
+                errors.Add(new IdentityError { Code = "EmptyAddress", Description = "Address cannot be empty." });
+            }
+            if (errors.Count() > 0)
+            {
+                return BadRequest(errors);
+            }
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)

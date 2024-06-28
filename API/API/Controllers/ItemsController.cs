@@ -47,7 +47,35 @@ namespace API.Controllers
             return Ok(items);
         }
 
+        // GET: api/items/id/details
+        [HttpGet("{id}/details")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<ItemDetailsDto>>> GetItemDetailsById(int id)
+        {
+            var item = await _context.Items
+                .Include(item => item.User)
+                .Select(item => new ItemDetailsDto
+                {
+                    Id = item.Id,
+                    Title = item.Title,
+                    Description = item.Description,
+                    Price = item.Price,
+                    SellerUsername = item.User.UserName,
+                    City = item.User.City,
+                    PhoneNumber = item.User.PhoneNumber,
+                    Address = item.User.Address,
+                    isAvailable = item.IsAvailable
 
+                })
+                .FirstOrDefaultAsync(item => item.Id == id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(item);
+        }
         // GET: api/items/id
         [HttpGet("{id}")]
         [AllowAnonymous]
@@ -171,6 +199,19 @@ namespace API.Controllers
                 UserId = user.Id,  
                 IsAvailable = true
             };
+            var errors = new List<IdentityError>();
+            if (item.Title.Length < 5 )
+            {
+                errors.Add(new IdentityError { Code = "shortTittle", Description = "Tittle must have at least 5 letters." });
+            }
+            if (item.Description.Length < 5)
+            {
+                errors.Add(new IdentityError { Code = "shortDescription", Description = "Description must have at least 5 letters." });
+            }
+            if (errors.Count() > 0)
+            {
+                return BadRequest(errors);
+            }
 
             _context.Items.Add(item);
             await _context.SaveChangesAsync();
