@@ -1,4 +1,4 @@
-﻿using API.Data;
+using API.Data;
 using API.Dtos;
 using API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -202,7 +202,7 @@ namespace API.Controllers
                 Price = itemDto.Price,
                 UserId = user.Id,  
                 IsAvailable = true,
-                AddTime = itemDto.AddTime
+                AddTime = DateTime.Now.AddHours(2)
             };
             var errors = new List<IdentityError>();
             if (item.Title.Length < 5 )

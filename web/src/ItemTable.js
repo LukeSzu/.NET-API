@@ -47,6 +47,7 @@ function ItemTable() {
                         <th>Title</th>
                         <th>Description</th>
                         <th>Price</th>
+                        <th>Add time</th>
                         <th>Seller</th>
                         <th>Actions</th>
                     </tr>
@@ -57,6 +58,7 @@ function ItemTable() {
                             <td>{item.title}</td>
                             <td>{item.description}</td>
                             <td>{item.price === 0 ? 'Free' : `${item.price.toFixed(2)}`}</td>
+                            <td>{item.addTime}</td>
                             <td>{item.sellerUsername}</td>
                             <td>
                             <Link to={`/details/${item.id}`}><button className="nav-item">Details</button></Link>
