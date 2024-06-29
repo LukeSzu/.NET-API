@@ -9,5 +9,7 @@
         public string SellerUsername { get; set; }
 
         public bool isAvailable { get; set; }
+
+        public DateTime AddTime { get; set; }
     }
 }

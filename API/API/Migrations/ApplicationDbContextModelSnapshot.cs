@@ -76,6 +76,9 @@ namespace API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("BuyerId")
                         .HasColumnType("varchar(255)")
                         .HasColumnName("buyer_id");

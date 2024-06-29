@@ -40,7 +40,8 @@ namespace API.Controllers
                     Description = item.Description,
                     Price = item.Price,
                     SellerUsername = item.User.UserName,
-                    isAvailable = item.IsAvailable
+                    isAvailable = item.IsAvailable,
+                    AddTime = item.AddTime
                 })
                 .ToListAsync();
 
@@ -64,7 +65,8 @@ namespace API.Controllers
                     City = item.User.City,
                     PhoneNumber = item.User.PhoneNumber,
                     Address = item.User.Address,
-                    isAvailable = item.IsAvailable
+                    isAvailable = item.IsAvailable,
+                    AddTime = item.AddTime
 
                 })
                 .FirstOrDefaultAsync(item => item.Id == id);
@@ -90,7 +92,8 @@ namespace API.Controllers
                     Description = item.Description,
                     Price = item.Price,
                     SellerUsername = item.User.UserName,
-                    isAvailable = item.IsAvailable
+                    isAvailable = item.IsAvailable,
+                    AddTime = item.AddTime
                 })
                 .FirstOrDefaultAsync(item => item.Id == id);
 
@@ -167,7 +170,8 @@ namespace API.Controllers
                 Title = i.Title,
                 Description = i.Description,
                 Price = i.Price,
-                SellerUsername = user.UserName
+                SellerUsername = user.UserName,
+                AddTime = i.AddTime
             }).ToList();
 
             return Ok(itemsDto);
@@ -197,7 +201,8 @@ namespace API.Controllers
                 Description = itemDto.Description,
                 Price = itemDto.Price,
                 UserId = user.Id,  
-                IsAvailable = true
+                IsAvailable = true,
+                AddTime = itemDto.AddTime
             };
             var errors = new List<IdentityError>();
             if (item.Title.Length < 5 )

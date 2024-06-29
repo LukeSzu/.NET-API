@@ -13,5 +13,7 @@
 
         public bool isAvailable { get; set; }
 
+        public DateTime AddTime { get; set; }
+
     }
 }

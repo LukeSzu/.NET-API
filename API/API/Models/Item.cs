@@ -20,6 +20,8 @@ namespace API.Models
         [Column("buyer_id")]
         public string? BuyerId { get; set; }
 
+        public DateTime AddTime { get; set; }
+
         // Navigation properties
         public User User { get; set; }
         public User Buyer { get; set; }
