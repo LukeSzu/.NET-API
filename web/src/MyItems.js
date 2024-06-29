@@ -46,6 +46,20 @@ function MyItemTable() {
         }
     };
 
+    const formatDateTime = (dateTimeString) => {
+        const date = new Date(dateTimeString);
+      
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+        const year = date.getFullYear(); 
+      
+        const hours = date.getHours().toString().padStart(2, '0'); 
+        const minutes = date.getMinutes().toString().padStart(2, '0'); 
+        const formattedDateTime = `${day}-${month}-${year} ${hours}:${minutes}`;
+      
+        return formattedDateTime;
+      };
+
 
     return (
         <div className="table-container">
@@ -57,6 +71,7 @@ function MyItemTable() {
                         <th>Title</th>
                         <th>Description</th>
                         <th>Price</th>
+                        <th>Add time</th>
                         <th>Seller</th>
                         <th>Actions</th>
                     </tr>
@@ -67,6 +82,7 @@ function MyItemTable() {
                             <td>{item.title}</td>
                             <td>{item.description}</td>
                             <td>{item.price === 0 ? 'Free' : `${item.price.toFixed(2)}`}</td>
+                            <td>{formatDateTime(item.addTime)}</td> 
                             <td>{item.sellerUsername}</td>
                             <td>
                             <Link to={`/details/${item.id}`}><button className="nav-item">Details</button></Link>
