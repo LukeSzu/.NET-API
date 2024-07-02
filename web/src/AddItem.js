@@ -113,7 +113,7 @@ const AddItem = () => {
                 value={item.description}
                 onChange={handleChange}
             />
-            <Label htmlFor="price">Price</Label>
+            <Label htmlFor="price">Price [PLN]</Label>
             <Input
                 id="price"
                 name="price"

@@ -1,8 +1,10 @@
 import { API_URL } from './config';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext  } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; // użyj useNavigate zamiast useHistory
 import styled from 'styled-components';
 import axios from 'axios';
+import { useExchangeRates } from './ExchangeRatesProvider';
+import { CurrencyContext } from './App'; // Importuj kontekst waluty
 
 const DetailsItem = () => {
     const { id } = useParams();
@@ -15,6 +17,14 @@ const DetailsItem = () => {
         Address: '', 
         PhoneNumber: ''  
     });
+
+    const exchangeRates = useExchangeRates();
+    const [selectedCurrency] = useContext(CurrencyContext); // Pobierz walutę z kontekstu
+
+    const convertPrice = (priceInPLN) => {
+        const rate = exchangeRates[selectedCurrency];
+        return (priceInPLN / rate).toFixed(2);
+      };
 
     useEffect(() => {
         axios.get(`${API_URL}/items/${id}/details`)
@@ -47,7 +57,7 @@ const DetailsItem = () => {
       <div>
         <p><strong>Title:</strong> {item.title}</p>
         <p><strong>Description:</strong> {item.description}</p>
-        <p><strong>Price:</strong> {item.price === 0 ? 'Free' : `${item.price}`}</p>
+        <p><strong>Price:</strong> {item.price === 0 ? 'Free' : `${convertPrice(item.price)} ${selectedCurrency}`}</p>
         <p><strong>Available:</strong> {item.isAvailable ? 'Yes' : 'No'}</p>
         <p><strong>City:</strong> {item.city}</p>
         <p><strong>Address:</strong> {item.address}</p>

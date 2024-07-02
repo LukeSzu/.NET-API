@@ -1,9 +1,11 @@
 import { API_URL } from './config'; 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import useLoginTimeout from './loginTimeout';
+import { useExchangeRates } from './ExchangeRatesProvider';
+import { CurrencyContext } from './App'; 
 
 const getUsernameFromLocalStorage = () => {
     return localStorage.getItem('username');
@@ -15,6 +17,14 @@ function MyItemTable() {
     const username = getUsernameFromLocalStorage();
     const { setLoginTimeout, clearLoginTimeout } = useLoginTimeout();
     const navigate = useNavigate();
+
+    const exchangeRates = useExchangeRates();
+    const [selectedCurrency] = useContext(CurrencyContext); 
+
+    const convertPrice = (priceInPLN) => {
+        const rate = exchangeRates[selectedCurrency];
+        return (priceInPLN / rate).toFixed(2);
+      };
 
     useEffect(() => {
         axios.get(`${API_URL}/items/myitems`, {
@@ -81,7 +91,7 @@ function MyItemTable() {
                         <tr key={item.id}>
                             <td>{item.title}</td>
                             <td>{item.description}</td>
-                            <td>{item.price === 0 ? 'Free' : `${item.price.toFixed(2)}`}</td>
+                            <td>{item.price === 0 ? 'Free' : `${convertPrice(item.price)} ${selectedCurrency}`}</td>
                             <td>{formatDateTime(item.addTime)}</td> 
                             <td>{item.sellerUsername}</td>
                             <td>

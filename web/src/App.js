@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import ItemTable from './ItemTable';
 import EditItem from './EditItem';
@@ -9,12 +9,25 @@ import AddItem from './AddItem';
 import DetailsItem from './DetailsItem';
 import './App.css';
 import useLoginTimeout from './loginTimeout';
+import ExchangeRatesProvider from './ExchangeRatesProvider';
+
+export const CurrencyContext = createContext(); // Eksportujemy CurrencyContext
+
+function useCurrency() {
+  return useContext(CurrencyContext);
+}
 
 function Navigation() {
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
   const { clearLoginTimeout } = useLoginTimeout();
-  document.title = "Advertising portal"
+  document.title = "Advertising portal";
+  const [selectedCurrency, setSelectedCurrency] = useCurrency();
+
+  const handleCurrencyChange = (e) => {
+    setSelectedCurrency(e.target.value);
+    console.log('Selected currency:', e.target.value);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('username');
@@ -24,58 +37,72 @@ function Navigation() {
   };
 
   return (
-    <nav class ='nav-container'>
+    <nav className='nav-container'>
       {username ? (
-        <span class="hi">Hi, {username}</span>
+        <span className="hi">Hi, {username}</span>
       ) : (
-        <span class="hi">Hi</span>
+        <span className="hi">Hi</span>
       )}
-      
+
       <ul>
         <li>
           <Link to="/" className="nav-item">All Items</Link>
         </li>
-        
+
         {username ? (
-            <>
+          <>
             <li>
-                <Link to="/myitems" className="nav-item">My items</Link>
+              <Link to="/myitems" className="nav-item">My items</Link>
             </li>
             <li>
-                <button onClick={handleLogout} className="nav-item">Logout</button>
+              <button onClick={handleLogout} className="nav-item">Logout</button>
             </li>
           </>
-        ): (
-            <>
+        ) : (
+          <>
             <li>
-            <   Link to="/login" className="nav-item">Login</Link>
+              <Link to="/login" className="nav-item">Login</Link>
             </li>
             <li>
-                <Link to="/register" className="nav-item">Register</Link>
+              <Link to="/register" className="nav-item">Register</Link>
             </li>
-            </>
+          </>
         )}
+        <li>
+          <select value={selectedCurrency} onChange={handleCurrencyChange} className="nav-item">
+            <option value="PLN">PLN</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </li>
       </ul>
     </nav>
   );
 }
 
 function App() {
+  const [selectedCurrency, setSelectedCurrency] = useState('PLN');
+
   return (
-    <Router>
-      <div>
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<ItemTable />} />
-          <Route path="/edit/:id" element={<EditItem />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/myitems" element={<MyItemTable />} />
-          <Route path="/additem" element={<AddItem />} />
-          <Route path="/details/:id" element={<DetailsItem />} />
-        </Routes>
-      </div>
-    </Router>
+    <ExchangeRatesProvider>
+      <CurrencyContext.Provider value={[selectedCurrency, setSelectedCurrency]}>
+        <Router>
+          <div>
+            <Navigation />
+            <Routes>
+              <Route path="/" element={<ItemTable />} />
+              <Route path="/edit/:id" element={<EditItem />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/myitems" element={<MyItemTable />} />
+              <Route path="/additem" element={<AddItem />} />
+              <Route path="/details/:id" element={<DetailsItem />} />
+            </Routes>
+          </div>
+        </Router>
+      </CurrencyContext.Provider>
+    </ExchangeRatesProvider>
   );
 }
 
