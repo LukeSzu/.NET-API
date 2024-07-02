@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useExchangeRates } from './ExchangeRatesProvider';
 import { CurrencyContext } from './App'; // Importuj kontekst waluty
+import { Link } from 'react-router-dom';
 
 const DetailsItem = () => {
     const { id } = useParams();
@@ -49,7 +50,17 @@ const DetailsItem = () => {
       
         return formattedDateTime;
       };
-
+      const formattedAddress = (address) => {
+        if (!address) return 'bad'; // Jeśli address jest puste, zwraca 'bad'
+      
+        const indexOfFirstSlash = address.indexOf('/'); // Znajduje indeks pierwszego ukośnika
+      
+        if (indexOfFirstSlash === -1) {
+          return address; // Jeśli brak ukośnika, zwraca oryginalny address
+        } else {
+          return address.substring(0, indexOfFirstSlash); // Zwraca fragment adresu przed pierwszym ukośnikiem
+        }
+      };
 
     return (
         <div className="item-details-container">
@@ -63,6 +74,7 @@ const DetailsItem = () => {
         <p><strong>Address:</strong> {item.address}</p>
         <p><strong>Phone Number:</strong> {item.phoneNumber}</p>
         <p><strong>Add time:</strong> {formatDateTime(item.addTime)}</p>
+        <p><strong>Map:</strong><Link to={`/map/${item.city}/${formattedAddress(item.address)}`}><button className="nav-item">Map</button></Link></p>
       </div>
     </div>
     );

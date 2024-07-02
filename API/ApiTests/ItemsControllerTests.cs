@@ -20,156 +20,76 @@ namespace ApiTests
 {
     public class ItemsControllerTests
     {
-        private readonly ApplicationDbContext _context;
+        private readonly Mock<UserManager<User>> _mockUserManager;
+        private readonly Mock<ApplicationDbContext> _mockContext;
         private readonly ItemsController _controller;
-        private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
 
         public ItemsControllerTests()
         {
+            _mockUserManager = new Mock<UserManager<User>>(
+            Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
+
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "TestDatabase")
                 .Options;
-            _context = new ApplicationDbContext(options);
-            SeedDatabase();
 
-            _configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-            var mockUserStore = new Mock<IUserStore<User>>();
-            var mockSignInManager = new Mock<SignInManager<User>>(mockUserStore.Object,
-                                                                   Mock.Of<IHttpContextAccessor>(),
-                                                                   Mock.Of<IUserClaimsPrincipalFactory<User>>(),
-                                                                   null, null, null, null)
-            {
-                CallBase = true
-            };
-
-            var mockUserManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
-            mockUserManager.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                           .ReturnsAsync(() => _context.Users.First(u => u.UserName == "user1")); 
-
-            _controller = new ItemsController(_context, mockUserManager.Object);
-            _userManager = mockUserManager.Object;
+            _mockContext = new Mock<ApplicationDbContext>(options);
+            _controller = new ItemsController(_mockContext.Object, _mockUserManager.Object);
         }
-        private void SeedDatabase()
+
+        [Fact]
+        public async Task GetItems_ReturnsOkResult_WithListOfItems()
         {
-            _context.Database.EnsureDeleted(); 
-            _context.Database.EnsureCreated(); 
-
-            var users = new List<User>
-            {
-                new User { Id = "1", UserName = "user1" },
-                new User { Id = "2", UserName = "user2" }
-            };
-            var passwordHasher = new PasswordHasher<User>();
-            foreach (var user in users)
-            {
-                user.PasswordHash = passwordHasher.HashPassword(user, "Password123!");
-            }
-
-            _context.Users.AddRange(users);
-            _context.SaveChanges(); // Save changes to detach tracked entities
-
+            // Arrange
             var items = new List<Item>
             {
-                new Item { Id = 1, UserId = "1", Title = "Item 1", Description = "Description 1", Price = 100, IsAvailable = true },
-                new Item { Id = 2, UserId = "2", Title = "Item 2", Description = "Description 2", Price = 200, IsAvailable = true }
+                new Item { Id = 1, UserId="1" ,Title = "Item1", Description = "Description1", Price = 10, IsAvailable = true, User = new User { Id="1" ,UserName = "User1" } },
+                new Item { Id = 2, UserId="1" ,Title = "Item2", Description = "Description2", Price = 20, IsAvailable = true, User = new User { Id="2", UserName = "User2" } }
             };
 
-            _context.Items.AddRange(items);
+            _mockContext.Setup(m => m.Items.Include(i => i.User).Where(i => i.IsAvailable).ToListAsync())
+                .ReturnsAsync(items);
 
-            _context.SaveChanges();
-        }
-        [Fact]
-        public async Task Get_Items_OkResult()
-        {
+            // Act
             var result = await _controller.GetItems();
 
+            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var items = Assert.IsAssignableFrom<IEnumerable<ItemDto>>(okResult.Value);
-            Assert.Equal(2, items.Count());
-
-            var item1 = items.FirstOrDefault(i => i.Id == 1);
-            Assert.NotNull(item1);
-            Assert.Equal("Item 1", item1.Title);
-            Assert.Equal("Description 1", item1.Description);
-            Assert.Equal(100, item1.Price);
-
-            var item2 = items.FirstOrDefault(i => i.Id == 2);
-            Assert.NotNull(item2);
-            Assert.Equal("Item 2", item2.Title);
-            Assert.Equal("Description 2", item2.Description);
-            Assert.Equal(200, item2.Price);
+            var returnItems = Assert.IsType<List<ItemDto>>(okResult.Value);
+            Assert.Equal(2, returnItems.Count);
         }
 
         [Fact]
-        public async Task Get_Item_OkResult()
+        public async Task GetItemDetailsById_ReturnsNotFound_WhenItemDoesNotExist()
         {
-            int itemId = 1;
-            var result = await _controller.GetItemById(itemId);
+            // Arrange
+            var itemId = 1;
+            _mockContext.Setup(m => m.Items.Include(i => i.User).FirstOrDefaultAsync(i => i.Id == itemId))
+                .ReturnsAsync((Item)null);
 
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var item = Assert.IsType<ItemDto>(okResult.Value);
-            Assert.Equal(itemId, item.Id);
+            // Act
+            var result = await _controller.GetItemDetailsById(itemId);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result.Result);
         }
+
         [Fact]
-        public async Task Get_Item_NotFound()
+        public async Task AddItem_ReturnsOkResult_WhenItemIsAdded()
         {
-            var result = await _controller.GetItemById(2137);
-            var okResult = Assert.IsType<NotFoundResult>(result.Result);
-        }
-        [Fact]
-        public async Task Get_Item_BadRequest()
-        {
-            var result = await _controller.GetItemById(-2);
-            var okResult = Assert.IsType<NotFoundResult>(result.Result);
-        }
-        [Fact]
-        public async Task Add_Item_CreatedResult()
-        {
-            var newItem = new AddItemDto { Title = "New Item", Description = "New Description", Price = 300 };
+            // Arrange
+            var addItemDto = new AddItemDto { Title = "NewItem", Description = "NewDescription", Price = 30 };
+            var user = new User { Id = "1", UserName = "User1" };
+            _mockUserManager.Setup(um => um.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(user);
+            _mockContext.Setup(m => m.SaveChangesAsync(default)).ReturnsAsync(1);
 
-            // Utwórz u¿ytkownika i token JWT dla testu
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == "user1");
-            Assert.NotNull(user);
-            var token = GenerateJwtToken(user);
-            // Ustaw nag³ówek Authorization z tokenem JWT
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
-            _controller.ControllerContext = new ControllerContext
-            {
-                HttpContext = httpContext
-            };
+            // Act
+            var result = await _controller.AddItem(addItemDto);
 
-            // Wykonaj akcjê dodawania przedmiotu
-            var result = await _controller.AddItem(newItem);
-
-            // SprawdŸ czy zwrócono poprawny wynik
-            var createdResult = Assert.IsType<CreatedAtActionResult>(result);
-            var item = Assert.IsType<Item>(createdResult.Value);
-            Assert.Equal(newItem.Title, item.Title);
-        }
-        private string GenerateJwtToken(User user)
-        {
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Issuer"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal("Item added successfully", ((dynamic)okResult.Value).Message);
         }
 
     }

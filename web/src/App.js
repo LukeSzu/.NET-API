@@ -10,6 +10,8 @@ import DetailsItem from './DetailsItem';
 import './App.css';
 import useLoginTimeout from './loginTimeout';
 import ExchangeRatesProvider from './ExchangeRatesProvider';
+import { Helmet } from 'react-helmet';
+import MapComponent from './MapComponent';
 
 export const CurrencyContext = createContext(); // Eksportujemy CurrencyContext
 
@@ -89,6 +91,9 @@ function App() {
       <CurrencyContext.Provider value={[selectedCurrency, setSelectedCurrency]}>
         <Router>
           <div>
+            <Helmet>
+              <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+            </Helmet>
             <Navigation />
             <Routes>
               <Route path="/" element={<ItemTable />} />
@@ -98,6 +103,7 @@ function App() {
               <Route path="/myitems" element={<MyItemTable />} />
               <Route path="/additem" element={<AddItem />} />
               <Route path="/details/:id" element={<DetailsItem />} />
+              <Route path="/map/:city/:street" element={<MapComponent/>} /> {/* Przekaż miasto i ulicę */}
             </Routes>
           </div>
         </Router>
