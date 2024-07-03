@@ -56,11 +56,11 @@ const Login = () => {
     return (
         <form onSubmit={handleSubmit} class="form-container">
             <div >
-                <label>Username:</label>
+                <label><span class="required">*</span>Username:</label>
                 <input type="text" name="username" value={form.username} onChange={handleChange} />
             </div>
             <div>
-                <label>Password:</label>
+                <label><span class="required">*</span>Password:</label>
                 <input type="password" name="password" value={form.password} onChange={handleChange} />
             </div>
             <button type="submit">Login</button>

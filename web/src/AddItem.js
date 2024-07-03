@@ -97,7 +97,7 @@ const AddItem = () => {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title"><span class="required">*</span>Title</Label>
             <Input
                 id="title"
                 name="title"
@@ -105,7 +105,7 @@ const AddItem = () => {
                 value={item.title}
                 onChange={handleChange}
             />
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description"><span class="required">*</span>Description</Label>
             <Input
                 id="description"
                 name="description"
@@ -113,7 +113,7 @@ const AddItem = () => {
                 value={item.description}
                 onChange={handleChange}
             />
-            <Label htmlFor="price">Price [PLN]</Label>
+            <Label htmlFor="price"><span class="required">*</span>Price [PLN]</Label>
             <Input
                 id="price"
                 name="price"

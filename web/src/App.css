@@ -205,3 +205,8 @@ tr:nth-child(even) {
 .item-details-container strong {
   font-weight: bold;
 }
+
+.required {
+  color: red;
+  margin-right: 5px; /* Opcjonalne: dodatkowy margines między tekstem a gwiazdką */
+}

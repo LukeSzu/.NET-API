@@ -52,32 +52,32 @@ const Register = () => {
     return (
         <form onSubmit={handleSubmit} class="form-container">
             <div>
-                <label>Username:</label>
-                <input type="text" name="username" value={form.username} onChange={handleChange} />
+                <label><span class="required">*</span>Username:</label>
+                <input type="text" name="username" value={form.username} onChange={handleChange} required/>
             </div>
             <div>
-                <label>Password:</label>
-                <input type="password" name="password" value={form.password} onChange={handleChange} />
+                <label><span class="required">*</span>Password:</label>
+                <input type="password" name="password" value={form.password} onChange={handleChange} required/>
             </div>
             <div>
-                <label>Retype password:</label>
-                <input type="password" name="Repassword" value={form.Repassword} onChange={handleChange} />
+                <label><span class="required">*</span>Retype password:</label>
+                <input type="password" name="Repassword" value={form.Repassword} onChange={handleChange} required/>
             </div>
             <div>
-                <label>E-mail</label>
-                <input type="text" name="email" value={form.email} onChange={handleChange} />
+                <label><span class="required">*</span>E-mail</label>
+                <input type="text" name="email" value={form.email} onChange={handleChange} required/>
             </div>
             <div>
-                <label>Phone number</label>
-                <input type="text" name="phonenumber" value={form.phonenumber} onChange={handleChange} pattern='[0-9]{9}' />
+                <label><span class="required">*</span>Phone number</label>
+                <input type="text" name="phonenumber" value={form.phonenumber} onChange={handleChange} pattern='[0-9]{9}' required />
             </div>
             <div>
-                <label>City:</label>
-                <input type="text" name="city" value={form.city} onChange={handleChange} />
+                <label><span class="required">*</span>City:</label>
+                <input type="text" name="city" value={form.city} onChange={handleChange} required/>
             </div>
             <div>
-                <label>Address:</label>
-                <input type="text" name="address" value={form.address} onChange={handleChange} />
+                <label><span class="required">*</span>Address:</label>
+                <input type="text" name="address" value={form.address} onChange={handleChange} required/>
             </div>
             <button type="submit">Register</button>
             {message && <p class="message">{message}</p>}
