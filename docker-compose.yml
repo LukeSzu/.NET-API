@@ -20,17 +20,15 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: auction_site
-    #volumes:
-      #- "./DB:/docker-entrypoint-initdb.d"
     ports:
       - "3306:3306"
     restart: always
 
-  #web:
-  #  build:
-  #    context: ./web
-  #    dockerfile: Dockerfile
-  #  ports:
-  #    - "80:80"  # Przykładowy port frontendu
-  #  depends_on:
-  #    - api
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "80:80" 
+    depends_on:
+      - api
