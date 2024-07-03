@@ -148,7 +148,7 @@ namespace API.Controllers
         // GET: api/items/myitems
         [Authorize]
         [HttpGet("myitems")]
-        public async Task<IActionResult> GetUserItems()
+        public async Task<ActionResult<IEnumerable<ItemDto>>> GetUserItems()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
@@ -227,7 +227,7 @@ namespace API.Controllers
 
         // DELETE: api/items/id
         [HttpDelete("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> DeleteItemById(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

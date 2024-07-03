@@ -17,14 +17,10 @@ namespace API.Models
         public decimal Price { get; set; }
         [Column("is_available")]
         public bool IsAvailable { get; set; }
-        [Column("buyer_id")]
-        public string? BuyerId { get; set; }
 
         public DateTime AddTime { get; set; }
 
         // Navigation properties
         public User User { get; set; }
-        public User Buyer { get; set; }
-        public ICollection<AuctionHistory> AuctionHistories { get; set; }
     }
 }

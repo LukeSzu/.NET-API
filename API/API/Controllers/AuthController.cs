@@ -27,10 +27,6 @@ namespace API.Controllers
             _signInManager = signInManager;
             _configuration = configuration;
         }
-        private string returnError(string code, string description)
-        {    
-            return "[{ \"code\": \""+code+ "\", \"description\": \"" + description+ "\"}]";
-        }
 
         [HttpPost("register")]
         [AllowAnonymous]
