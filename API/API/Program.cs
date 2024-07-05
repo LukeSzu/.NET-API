@@ -19,7 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 21)),
         mySqlOptions =>
         {
-            mySqlOptions.EnableRetryOnFailure(); // Dodanie obs³ugi ponowienia prób
+            mySqlOptions.EnableRetryOnFailure();
         });
 });
 
@@ -27,7 +27,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Dodanie obs³ugi CORS
+// Cors 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",

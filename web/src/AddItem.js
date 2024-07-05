@@ -43,7 +43,7 @@ const AddItem = () => {
     const { id } = useParams();
     const navigate = useNavigate(); 
     const [item, setItem] = useState({ title: '', description: '', price: '', isAvailable: false });
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState(''); //Error messages
     const [actionSuccess, setActionSuccess] = useState(false);
 
     const handleChange = (e) => {
@@ -57,6 +57,7 @@ const AddItem = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        //Empty price to free
         if(item.price == ''){
             item.price = '0'
         }
@@ -65,7 +66,7 @@ const AddItem = () => {
             description: item.description,
             price: item.price,
         }
-
+        //Request for adding item
         try{
             const response = await axios.post(`${API_URL}/items`, editData, {
                 headers: {
@@ -76,10 +77,11 @@ const AddItem = () => {
             setMessage('Item added successfully!');
             setActionSuccess(true);
         }catch(error){
+            //Error displaying if errors in answer
             if (error.response && error.response.data && Array.isArray(error.response.data)) {
                 const firstErrorDescription = error.response.data[0].description;
                 setMessage(firstErrorDescription);
-            } else {
+            } else { //Internal error
                 setMessage("Another error ¯\\_(ツ)_/¯");
             }
         }
@@ -104,6 +106,7 @@ const AddItem = () => {
                 type="text"
                 value={item.title}
                 onChange={handleChange}
+                required
             />
             <Label htmlFor="description"><span class="required">*</span>Description</Label>
             <Input
@@ -112,6 +115,7 @@ const AddItem = () => {
                 type="text"
                 value={item.description}
                 onChange={handleChange}
+                required
             />
             <Label htmlFor="price"><span class="required">*</span>Price [PLN]</Label>
             <Input

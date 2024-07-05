@@ -21,12 +21,13 @@ function ItemTable() {
         return (priceInPLN / rate).toFixed(2);
       };
 
+    //All available items request
     useEffect(() => {
         axios.get(`${API_URL}/items`)
             .then(response => setItems(response.data))
             .catch(error => setError('Error fetching items'));
     }, []);
-
+    //request for deleting item
     const handleDelete = async (itemId) => {
         try {
             const token = localStorage.getItem('token');
@@ -40,7 +41,7 @@ function ItemTable() {
             console.error('Error deleting item:', error);
         }
     };
-
+    
     const formatDateTime = (dateTimeString) => {
         const date = new Date(dateTimeString);
       

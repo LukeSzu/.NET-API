@@ -20,13 +20,15 @@ const DetailsItem = () => {
     });
 
     const exchangeRates = useExchangeRates();
-    const [selectedCurrency] = useContext(CurrencyContext); // Pobierz walutę z kontekstu
+    const [selectedCurrency] = useContext(CurrencyContext); // Get current from context
 
+    //Convert to another currency, default currency is pln
     const convertPrice = (priceInPLN) => {
         const rate = exchangeRates[selectedCurrency];
         return (priceInPLN / rate).toFixed(2);
       };
 
+    //Request for item details
     useEffect(() => {
         axios.get(`${API_URL}/items/${id}/details`)
             .then(response => {
@@ -46,19 +48,19 @@ const DetailsItem = () => {
       
         const hours = date.getHours().toString().padStart(2, '0'); 
         const minutes = date.getMinutes().toString().padStart(2, '0'); 
-        const formattedDateTime = `${day}-${month}-${year} ${hours}:${minutes}`;
+        const formattedDateTime = `${day}-${month}-${year} ${hours}:${minutes}`; //Formating date
       
         return formattedDateTime;
       };
       const formattedAddress = (address) => {
-        if (!address) return 'bad'; // Jeśli address jest puste, zwraca 'bad'
+        if (!address) return 'bad'; // if address is empty, returns bad (for map)
       
-        const indexOfFirstSlash = address.indexOf('/'); // Znajduje indeks pierwszego ukośnika
+        const indexOfFirstSlash = address.indexOf('/'); // if '/' exist remove everything after that
       
         if (indexOfFirstSlash === -1) {
-          return address; // Jeśli brak ukośnika, zwraca oryginalny address
+          return address; // if '/' doesnt exist, return original adress
         } else {
-          return address.substring(0, indexOfFirstSlash); // Zwraca fragment adresu przed pierwszym ukośnikiem
+          return address.substring(0, indexOfFirstSlash);
         }
       };
 

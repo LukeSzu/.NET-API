@@ -30,7 +30,7 @@ function Navigation() {
     setSelectedCurrency(e.target.value);
     console.log('Selected currency:', e.target.value);
   };
-
+  //remove information about token 
   const handleLogout = () => {
     localStorage.removeItem('username');
     localStorage.removeItem('token');
@@ -103,7 +103,7 @@ function App() {
               <Route path="/myitems" element={<MyItemTable />} />
               <Route path="/additem" element={<AddItem />} />
               <Route path="/details/:id" element={<DetailsItem />} />
-              <Route path="/map/:city/:street" element={<MapComponent/>} /> {/* Przekaż miasto i ulicę */}
+              <Route path="/map/:city/:street" element={<MapComponent/>} />
             </Routes>
           </div>
         </Router>

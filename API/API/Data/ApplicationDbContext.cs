@@ -24,16 +24,16 @@ namespace API.Data
             modelBuilder.Entity<IdentityUserLogin<string>>().HasKey(x => new { x.LoginProvider, x.ProviderKey });
             modelBuilder.Entity<IdentityUserRole<string>>().HasKey(x => new { x.UserId, x.RoleId });
             modelBuilder.Entity<IdentityUserToken<string>>().HasKey(x => new { x.UserId, x.LoginProvider, x.Name });
-            // Relacja między Item a User (właściciel)
+            // Relation between Item and User
             modelBuilder.Entity<Item>()
                 .HasOne(item => item.User)
                 .WithMany(user => user.Items)
                 .HasForeignKey(item => item.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // lub .Cascade dla zachowania referencyjnego
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Id)
-                .ValueGeneratedOnAdd(); // Możesz dodać to, jeśli Id jest generowane automatycznie
+                .ValueGeneratedOnAdd();
 
         }
     }

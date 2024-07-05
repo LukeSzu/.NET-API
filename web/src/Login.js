@@ -24,6 +24,7 @@ const Login = () => {
             localStorage.setItem('username', response.data.username);
             const token = localStorage.getItem('token');
 
+            //decoding token for expiration date
             const { exp } = jwtDecode(token);
             const expirationTime = exp * 1000;
 
@@ -31,6 +32,7 @@ const Login = () => {
             const timeUntilExpiration = expirationTime - currentTime;
 
             clearLoginTimeout();
+            //auto logout after expiration
             setLoginTimeout(() => {
                 localStorage.removeItem('token');
                 localStorage.removeItem('username');
@@ -43,6 +45,7 @@ const Login = () => {
             setMessage("Bad login or password");
         }
     };
+    //Navigate after 3 seconds if login was successful
     useEffect(() => {
         if (loginSuccess) {
             const timeoutId = setTimeout(() => {
@@ -57,11 +60,11 @@ const Login = () => {
         <form onSubmit={handleSubmit} class="form-container">
             <div >
                 <label><span class="required">*</span>Username:</label>
-                <input type="text" name="username" value={form.username} onChange={handleChange} />
+                <input type="text" name="username" value={form.username} onChange={handleChange} required />
             </div>
             <div>
                 <label><span class="required">*</span>Password:</label>
-                <input type="password" name="password" value={form.password} onChange={handleChange} />
+                <input type="password" name="password" value={form.password} onChange={handleChange} required />
             </div>
             <button type="submit">Login</button>
             {message && <p class="message">{message}</p>}

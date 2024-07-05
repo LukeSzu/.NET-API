@@ -41,11 +41,11 @@ const Button = styled.button`
 
 const EditItem = () => {
     const { id } = useParams();
-    const navigate = useNavigate(); // użyj useNavigate
+    const navigate = useNavigate(); 
     const [item, setItem] = useState({ title: '', description: '', price: '', isAvailable: false });
 
     useEffect(() => {
-        // Pobierz szczegóły przedmiotu z API
+        //Request for item to be editted
         axios.get(`${API_URL}/items/${id}`)
             .then(response => {
                 setItem(response.data);
@@ -57,6 +57,7 @@ const EditItem = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        //Changing 'true'/'false' to boolean type (for json)
         const newValue = name === 'isAvailable' ? value === 'true' : value;
 
         setItem(prevItem => ({
@@ -74,6 +75,7 @@ const EditItem = () => {
             price: item.price,
             isAvailable: item.isAvailable
         }
+        //Update request
         axios.put(`${API_URL}/items/${id}`, editData, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
